@@ -4,41 +4,41 @@ pragma solidity ^0.8.17;
 import "./vault.sol";
 
 contract Tasks {
-    enum TaskStatus { Incomplete, Completed }
+    enum BattleStatus { Incomplete, Completed }
 
-    struct Task {
-        uint256 taskId;
-        string taskDescription;
+    struct Battle {
+        uint256 battleId;
+        string battleDescription;
         uint256 reward;
-        TaskStatus status;
+        BattleStatus status;
     }
 
-    Task[] public tasks;
+    Battle[] public battles;
     address public vaultAddress;
 
-    event TaskCompleted(uint256 indexed taskId, address indexed player, uint256 reward);
+    event BattleCompleted(uint256 indexed battleId, address indexed player, uint256 reward);
 
     constructor(address _vaultAddress) {
         vaultAddress = _vaultAddress;
     }
 
-    function createBattle(string memory _taskDescription, uint256 _reward) external {
-        uint256 taskId = tasks.length;
-        tasks.push(Task({
-            taskId: taskId,
-            taskDescription: _taskDescription,
+    function createBattle(string memory _battleDescription, uint256 _reward) external {
+        uint256 battleId = battles.length;
+        battles.push(Battle({
+            battleId: battleId,
+            battleDescription: _battleDescription,
             reward: _reward,
-            status: TaskStatus.Incomplete
+            status: BattleStatus.Incomplete
         }));
     }
 
-    function EndBattle(uint256 _taskId) external {
-        require(_taskId < tasks.length, "Battle does not exist");
-        require(tasks[_taskId].status == TaskStatus.Incomplete, "You Won the Battle!");
+    function EndBattle(uint256 _battleId) external payable{
+        require(_battleId < battles.length, "Battle does not exist");
+        require(battles[_battleId].status == BattleStatus.Incomplete, "You Won the Battle!");
 
-        tasks[_taskId].status = TaskStatus.Completed;
-        Vault(vaultAddress).deposit(tasks[_taskId].reward);
+        battles[_battleId].status = BattleStatus.Completed;
+        Vault(vaultAddress).deposit(battles[_battleId].reward);
 
-        emit TaskCompleted(_taskId, msg.sender, tasks[_taskId].reward);
+        emit BattleCompleted(_battleId, msg.sender, battles[_battleId].reward);
     }
 }
