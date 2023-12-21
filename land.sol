@@ -19,8 +19,8 @@ contract Land {
         vaultAddress = _vaultAddress;
     }
 
-    function purchaseLand(uint256 _landId, uint256 _purchasePrice) external {
-        require(!landInfo[_landId].isOwned, "Land already owned");
+    function purchaseKingdom(uint256 _landId, uint256 _purchasePrice) external {
+        require(!landInfo[_landId].isOwned, "Kingdom already purshased");
         Vault(vaultAddress).withdraw(_purchasePrice);
         landInfo[_landId] = LandInfo({
             owner: msg.sender,

@@ -22,7 +22,7 @@ contract Tasks {
         vaultAddress = _vaultAddress;
     }
 
-    function createTask(string memory _taskDescription, uint256 _reward) external {
+    function createBattle(string memory _taskDescription, uint256 _reward) external {
         uint256 taskId = tasks.length;
         tasks.push(Task({
             taskId: taskId,
@@ -32,11 +32,9 @@ contract Tasks {
         }));
     }
 
-    function completeTask(uint256 _taskId) external {
-        require(_taskId < tasks.length, "Task does not exist");
-        require(tasks[_taskId].status == TaskStatus.Incomplete, "Task already completed");
-
-        // Your additional logic for completing the task and rewarding the player goes here
+    function EndBattle(uint256 _taskId) external {
+        require(_taskId < tasks.length, "Battle does not exist");
+        require(tasks[_taskId].status == TaskStatus.Incomplete, "You Won the Battle!");
 
         tasks[_taskId].status = TaskStatus.Completed;
         Vault(vaultAddress).deposit(tasks[_taskId].reward);
